@@ -11,9 +11,9 @@ import (
 
 type Book struct {
 	BookID   int    `json:"id"`
-	bookName string `json:"boook_name"`
-	author   string `json:"author"`
-	publish  int    `json:"published"`
+	BookName string `json:"book_name"`
+	Author   string `json:"author"`
+	Publish  int    `json:"published"`
 }
 
 func InsertBook(ctx *gin.Context) {
@@ -25,7 +25,7 @@ func InsertBook(ctx *gin.Context) {
 	}
 
 	query := `INSERT INTO book_library (book_name, author, published) VALUES ($1, $2, $3) RETURNING id`
-	err := config.DB.QueryRow(query, newBook.bookName, newBook.author, newBook.publish).Scan(&newBook.BookID)
+	err := config.DB.QueryRow(query, newBook.BookName, newBook.Author, newBook.Publish).Scan(&newBook.BookID)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error_status":  "Failed to Create Data",
@@ -55,7 +55,7 @@ func GetBooks(ctx *gin.Context) {
 	bookDatas := []Book{}
 	for rows.Next() {
 		var book Book
-		if err := rows.Scan(&book.bookName, &book.author, &book.publish); err != nil {
+		if err := rows.Scan(&book.BookID, &book.BookName, &book.Author, &book.Publish); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"error_status":  "Failed to Scan Data",
 				"error_message": err.Error(),
@@ -95,7 +95,7 @@ func UpdateBook(ctx *gin.Context) {
 	}
 
 	query := `UPDATE book_library SET book_name = $1, author = $2, published = $3 WHERE id = $4`
-	result, err := config.DB.Exec(query, updatedBook.bookName, updatedBook.author, updatedBook.publish, bookID)
+	result, err := config.DB.Exec(query, updatedBook.BookName, updatedBook.Author, updatedBook.Publish, bookID)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error_status":  "Failed to Update Data",
