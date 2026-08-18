@@ -10,10 +10,10 @@ import (
 )
 
 type Book struct {
-	BookID int `json:"id"`
+	BookID   int    `json:"id"`
 	bookName string `json:"boook_name"`
-	author string `json:"author"`
-	publish string `json:"published"`
+	author   string `json:"author"`
+	publish  int    `json:"published"`
 }
 
 func InsertBook(ctx *gin.Context) {
@@ -27,8 +27,8 @@ func InsertBook(ctx *gin.Context) {
 	query := `INSERT INTO book_library (book_name, author, published) VALUES ($1, $2, $3) RETURNING id`
 	err := config.DB.QueryRow(query, newBook.bookName, newBook.author, newBook.publish).Scan(&newBook.BookID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H {
-			"error_status": "Failed to Create Data",
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error_status":  "Failed to Create Data",
 			"error_message": err.Error(),
 		})
 		return
@@ -37,7 +37,7 @@ func InsertBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{
 		"book": newBook,
 	})
-	
+
 }
 
 func GetBooks(ctx *gin.Context) {
@@ -118,7 +118,6 @@ func UpdateBook(ctx *gin.Context) {
 		"book": updatedBook,
 	})
 }
-
 
 func DeleteBook(ctx *gin.Context) {
 	bookID, err := strconv.Atoi(ctx.Param("bookID"))
